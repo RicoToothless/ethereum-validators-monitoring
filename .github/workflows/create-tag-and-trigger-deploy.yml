@@ -4,8 +4,13 @@ on:
     branches:
       - main
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 permissions:
   contents: write
+  packages: write
 
 jobs:
   bump:
@@ -35,6 +40,19 @@ jobs:
         uses: lidofinance/action-gh-release@v1
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
+      # Publish container image to github packages
+      - name: Log in to the container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push container image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.tag.outputs.tag }}
 
   deploy-trigger:
     needs: bump
