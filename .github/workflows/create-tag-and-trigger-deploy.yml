@@ -57,7 +57,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.tag.outputs.tag }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   deploy-trigger:
     needs: bump
