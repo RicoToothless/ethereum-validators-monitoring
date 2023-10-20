@@ -62,6 +62,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+
   deploy-trigger:
     needs: bump
     name: Trigger build and PR creation in the infra-mainnet
